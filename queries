@@ -1,0 +1,80 @@
+-- Selecting all the inormation
+SELECT *
+FROM nba_10;
+
+-- Nested Query to see how many players scored above the avg points pergame that year
+SELECT DISTINCT COUNT(player_name) 
+FROM nba_10
+WHERE points_per_game > (SELECT AVG(points_per_game) FROM nba_10);
+
+-- How many players played on different teams during the season?
+
+SELECT player_name, COUNT(player_name)
+FROM nba_10
+GROUP BY player_name
+HAVING COUNT(player_name) > 1;
+
+--How many teams did one specific player play on during a season
+
+SELECT *
+FROM nba_10
+WHERE player_name = 'Ignas Brazdeikis';
+
+-- Avg ppg during the 2021-2022 Season
+SELECT AVG(ppg) 
+FROM nba_10;
+
+--Find all players who played on the Miami Heat
+SELECT * 
+FROM nba_10
+WHERE player_team = 'MIA';
+
+-- Who Started the Most Games on the New York Knicks?
+Select player_name, minutes_played, games_played, games_started
+FROM nba_10
+WHERE player_team = 'NYK'
+GROUP BY games_started
+ORDER BY games_started DESC LIMIT 1;
+
+-- Who played the 4th most games on the NYK?
+Select player_name, minutes_played, games_played, games_started
+FROM nba_10
+WHERE player_team = 'NYK'
+GROUP BY games_started
+ORDER BY games_started DESC LIMIT 3,1;
+
+-- Find all players on the Boston Celtics who scoed above the league average in ppg
+SELECT * 
+FROM nba_10
+WHERE player_team = 'BOS'
+AND points_per_game > (SELECT AVG(points_per_game) from nba_10)
+AND games_played > (SELECT AVG(games_played) FROM nba_10);
+
+-- Change the table name points_per_game to 'PPG' when ran
+SELECT player_name, points_per_game AS 'ppg'
+FROM twentytwenty_twentyone
+Group BY ppg
+ORDER BY ppg DESC LIMIT 5;
+
+
+--Find the Number of players who scored above the average ppg in the league
+
+SELECT COUNT(player_name)
+FROM nba_10
+WHERE points_per_game > ( SELECT AVG(points_per_game)
+ FROM nba_10
+ WHERE minutes_played > 19.4)
+AND games_started > (SELECT AVG(games_started)
+FROM nba_10);
+
+-- Who had the highest 3p percentage on the Dallas Mavericks? (You should get Maxi Kleber)
+
+SELECT *
+FROM nba_10
+WHERE three_points_attempted > (SELECT AVG(three_points_attempted)
+FROM nba_10)
+AND games_played > (SELECT AVG(games_played) FROM nba_10)
+AND minutes_played > (SELECT AVG(minutes_played) FROM nba_10)
+AND player_team = 'DAL'
+GROUP BY three_point_percentage
+ORDER BY three_point_percentage DESC LIMIT 1;
